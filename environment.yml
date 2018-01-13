@@ -1,0 +1,5 @@
+name: aws-cloudwatch-log-clean
+channels:
+  - conda-forge
+dependencies:
+  - boto3
