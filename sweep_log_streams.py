@@ -75,11 +75,10 @@ def delete_old_streams(log_group, dry_run=False):
                 print_log_group(log_group, "Would delete stream: " + stream['logStreamName'] + " (--dry-run set)")
             else:
                 print_log_group(log_group, "Deleting stream: " + stream['logStreamName'])
-                delete_result = client.delete_delete_log_stream(
+                client.delete_log_stream(
                     logGroupName=log_group['logGroupName'],
                     logStreamName=stream['logStreamName']
                 )
-                print(delete_result)
                 print_log_group(log_group, "Deleted stream: " + stream['logStreamName'])
         else:
             print_log_group(log_group, "Checked stream, keeping: " + stream['logStreamName'])
