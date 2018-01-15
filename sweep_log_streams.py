@@ -2,6 +2,7 @@
 import argparse
 from datetime import datetime, timedelta
 from dateutil import tz
+from time import sleep
 
 import boto3
 
@@ -80,6 +81,8 @@ def delete_old_streams(log_group, dry_run=False):
                     logStreamName=stream['logStreamName']
                 )
                 print_log_group(log_group, "Deleted stream: " + stream['logStreamName'])
+                # The AWS API gets overloaded if we go too fast.
+                sleep(0.2)
         else:
             print_log_group(log_group, "Checked stream, keeping: " + stream['logStreamName'])
 
