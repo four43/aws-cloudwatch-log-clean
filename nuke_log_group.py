@@ -8,25 +8,17 @@ client = boto3.client('logs')
 def get_log_group_config(log_group_name):
     log_groups_result = client.describe_log_groups(
         logGroupNamePrefix=log_group_name,
-        limit=2
     )
     log_groups = log_groups_result['logGroups']
-    if len(log_groups) == 0:
-        # No log group found
-        raise Exception("No log groups found by name: " + log_group_name)
-    elif len(log_groups) > 1:
-        # Too many log groups found
-        raise Exception("More than one log group found, be more specific: {}\n"
-                        " - Nuking a log group is pretty destructive, we'll just do one at a time for now"
-                        .format(log_group_name))
 
-    log_group_config = log_groups[0]
+    for log_group_config in log_groups:
+        log_group_config
+        if log_group_config['logGroupName'] == log_group_name:
+            print("Found log group with matching name: {}".format(log_group_config['logGroupName']))
+            return log_group_config
 
-    if log_group_config['logGroupName'] != log_group_name:
-        # Name wasn't an exact match
-        raise Exception("Log group found a single match but it wasn't quite right.\n"
-                        "Did you mean: " + log_group_config['logGroupName'] + " ?")
-    return log_group_config
+    # if no matching log group is found, it will reach here
+    raise Exception("No log groups found by name: " + log_group_name)
 
 
 def get_log_group_metric_filters(log_group_name, next_token=None):
