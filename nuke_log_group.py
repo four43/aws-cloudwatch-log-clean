@@ -15,10 +15,12 @@ def get_log_group_config(log_group_name):
         # No log group found
         raise Exception("No log groups found by name: " + log_group_name)
     elif len(log_groups) > 1:
-        # Too many log groups found
-        raise Exception("More than one log group found, be more specific: {}\n"
-                        " - Nuking a log group is pretty destructive, we'll just do one at a time for now"
-                        .format(log_group_name))
+        # Still okay if it matches exactly.
+        if log_groups[0]['logGroupName'] != log_group_name:
+            # Too many log groups found
+            raise Exception("More than one log group found, be more specific: {}\n"
+                            " - Nuking a log group is pretty destructive, we'll just do one at a time for now"
+                            .format(log_group_name))
 
     log_group_config = log_groups[0]
 
@@ -111,7 +113,7 @@ def main(log_group_name, dry_run=False):
     if dry_run:
         print(
             "Would put new retention policy of {} days (but --dry-run is set)"
-            .format(log_group_config['retentionInDays'])
+                .format(log_group_config['retentionInDays'])
         )
     else:
         print("Setting expiration to: {} days".format(log_group_config['retentionInDays']))
